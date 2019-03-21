@@ -2,17 +2,22 @@ package it.polito.tdp.numero.model;
 
 import java.security.InvalidParameterException;
 
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+
 public class NumeroModel {
 	
 	private final int NMAX = 100;
 	private final int TMAX = 8;
 
 	private int segreto;
-	private int tentativiFatti;
+	//private int tentativiFatti;
+	private IntegerProperty tentativiFatti;
 	private boolean inGioco = false;
 	
 	public NumeroModel () {
 		inGioco = false;
+		this.tentativiFatti = new SimpleIntegerProperty();
 	}
 
 	/**
@@ -21,7 +26,7 @@ public class NumeroModel {
 	public void newGame() {
 		inGioco = true;
 		this.segreto = (int) (Math.random() * NMAX) + 1;
-		this.tentativiFatti = 0;
+		this.tentativiFatti.set(0);
 	}
 	
 	/**
@@ -43,8 +48,8 @@ public class NumeroModel {
 		}
 		
 		//gestisci tentativo
-		tentativiFatti++;
-		if (tentativiFatti == TMAX) {
+		tentativiFatti.set(tentativiFatti.get() +1);
+		if (tentativiFatti.get()== TMAX) {
 			inGioco = false; 
 		}
 		
@@ -73,9 +78,6 @@ public class NumeroModel {
 		return segreto;
 	}
 
-	public int getTentativiFatti() {
-		return tentativiFatti;
-	}
 
 	public boolean isInGioco() {
 		return inGioco;
@@ -84,6 +86,21 @@ public class NumeroModel {
 	public int getTMAX() {
 		return TMAX;
 	}
+
+	public final IntegerProperty tentativiFattiProperty() {
+		return this.tentativiFatti;
+	}
+	
+
+	public final int getTentativiFatti() {
+		return this.tentativiFattiProperty().get();
+	}
+	
+
+	public final void setTentativiFatti(final int tentativiFatti) {
+		this.tentativiFattiProperty().set(tentativiFatti);
+	}
+	
 	
 	
 	

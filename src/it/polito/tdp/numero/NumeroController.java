@@ -4,6 +4,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import it.polito.tdp.numero.model.NumeroModel;
+import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
@@ -36,9 +37,6 @@ public class NumeroController {
 	@FXML
 	private TextArea txtMessaggi;
 
-	public void setModel(NumeroModel model) {
-		this.model = model;
-	}
 	
 	@FXML
 	void handleNuovaPartita(ActionEvent event) {
@@ -48,7 +46,7 @@ public class NumeroController {
 		boxControllopartita.setDisable(true);
 		boxControlloTentativi.setDisable(false);
 		txtMessaggi.clear();
-		txtRimasti.setText(Integer.toString(model.getTMAX()));
+		//txtRimasti.setText(Integer.toString(0));
 		
 		//Comunico al modello di iniziare una nuova partita
 		model.newGame();
@@ -88,7 +86,7 @@ public class NumeroController {
 		else if (risultato>0) {
 			txtMessaggi.appendText("Tentativo troppo ALTO\n");
 		}
-		txtRimasti.setText(Integer.toString(model.getTMAX()-model.getTentativiFatti()));
+		//txtRimasti.setText(Integer.toString(model.getTMAX()-model.getTentativiFatti()));
 		
 		if (!model.isInGioco()) {
 			//la partita è finita
@@ -110,4 +108,19 @@ public class NumeroController {
 		assert txtMessaggi != null : "fx:id=\"txtMessaggi\" was not injected: check your FXML file 'Numero.fxml'.";
 		
 	}
+	
+	public void setModel(NumeroModel model) {
+		this.model = model;
+		txtRimasti.textProperty().bind(Bindings.convert(model.tentativiFattiProperty()));
+		//Abbiamo definito una property per collegare il valore dei tentativi fatti, che si aggiorna nel model, direttamente 
+		//con la grafica, senza passare dal controller. Infatti il campo txtRimasti è collegato alla SimpleIntegerProperty
+		//tentativiFatti utilizzando la funzione bind.
+		//poichè la property era intera per collegare ad una property di testo abbiamo utilizzato la funzione Bindings.convert
+		//Esistono anche delle property booleane per collegarle per esempio ai disable delle aree di testo
+	}
+	
+	
+	
+	
+	
 }
